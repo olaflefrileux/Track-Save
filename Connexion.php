@@ -16,12 +16,14 @@ if (Is_co()) {
 
 // Connexion
 if ($_POST) {	
-	$resultat = executeRequete("SELECT * FROM membre WHERE pseudo = :pseudo", array(':pseudo' => $_POST['pseudo']));
+	$resultat = executeRequete("SELECT * FROM membre WHERE login = :login", array(':login' => $_POST['login']));
 
 	if ($resultat->rowCount() != 0) {
 		$membre = $resultat->fetch(PDO::FETCH_ASSOC);
-		if ($membre['mdp'] == md5($_POST['mdp'])) {
-			$_SESSION['membre'] = $membre;
+		if ($membre['mdp'] == $_POST['mdp']) {
+			$_SESSION['membre'] = $membre['login'];
+			$_SESSION['mail'] = $membre['mail'];
+			$_SESSION['statut'] = $membre['statut'];
 			header('location:gestion_profil.php'); 
 			exit();
 
@@ -31,7 +33,7 @@ if ($_POST) {
 		}
 	} else {
 
-		echo '<script type="text/javascript">window.alert("erreur de pseudo");</script>';
+		echo '<script type="text/javascript">window.alert("erreur de login");</script>';
 	}
 
 } 
